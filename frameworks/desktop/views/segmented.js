@@ -1217,7 +1217,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
         isSelected;
 
     // The index where childViews are all overflowed
-    if (this.overflowItems) {
+    if (this.overflowItems && overflowView) {
       overflowItemsLength = this.overflowItems.get('length');
       overflowIndex = childViews.get('length') - 1 - overflowItemsLength;
 
