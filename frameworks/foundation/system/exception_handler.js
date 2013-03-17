@@ -75,7 +75,7 @@ SC.ExceptionHandler = {
   '<br><br>',
   exception.message,
   '<div id="sc-error-dialog-reload-button" onclick="window.location.reload();" style="float: right; font-family: Monaco, monospace; font-size: 9px; letter-spacing: 1px; border: 1px solid black; padding: 3px; clear: both; margin-top: 20px; cursor: pointer;">',
-  'Reload',
+  '<a href="javascript:window.location.reload();">Reload</a>',
   '</div>',
 '</div>'
     ];
