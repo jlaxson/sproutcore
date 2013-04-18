@@ -202,6 +202,7 @@ SC.FlowedLayout = {
     c.addObserver('maxSpacerLength', this, '_scfl_tileOnce');
     c.addObserver('fillWidth', this, '_scfl_tileOnce');
     c.addObserver('fillHeight', this, '_scfl_tileOnce');
+    c.addObserver('fillRemaining', this, '_scfl_tileOnce');
   },
 
   /** @private
@@ -219,6 +220,7 @@ SC.FlowedLayout = {
     c.removeObserver('maxSpacerLength', this, '_scfl_tileOnce');
     c.removeObserver('fillWidth', this, '_scfl_tileOnce');
     c.removeObserver('fillHeight', this, '_scfl_tileOnce');
+    c.removeObserver('fillRemaining', this, '_scfl_tileOnce');
   },
 
   /**
@@ -523,6 +525,7 @@ SC.FlowedLayout = {
 
         // whether this item should attempt to fill to the row's size
         fillRow: isVertical ? child.get('fillWidth') : child.get('fillHeight'),
+        fillRemaining: child.get('fillRemaining'),
 
         // whether this item is a spacer, and thus should be resized to its itemLength
         isSpacer: child.get('isSpacer'),
@@ -637,6 +640,11 @@ SC.FlowedLayout = {
       // if this item has fillWidth or fillHeight set, the row should expand
       // laterally
       if(!item.fillRow) shouldExpand = NO;
+      if (item.fillRemaining) {
+        var frame = this.get('frame'),
+            width = frame && frame.width;
+        item.itemLength = width - position;
+      }
 
       // if the item is not a fill-row item, this row has a size that all fill-row
       // items should expand to
