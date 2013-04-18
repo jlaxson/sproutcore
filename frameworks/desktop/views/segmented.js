@@ -297,6 +297,8 @@ SC.SegmentedView = SC.View.extend(SC.Control,
 
   valueAlwaysMultiple: NO,
 
+  shouldAutoResize: YES,
+
   /** @private
     The following properties are used to map items to child views. Item keys
     are looked up on the item based on this view's value for each 'itemKey'.
@@ -555,7 +557,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
     if (this.get('isVisibleInWindow')) {
       // Make all the views visible so that they can be measured
       overflowView = childViews.lastObject();
-      overflowView.set('isVisible', YES);
+      if (overflowView) overflowView.set('isVisible', YES);
 
       for (var i = childViews.get('length') - 1; i >= 0; i--){
         childViews.objectAt(i).set('isVisible', YES);
@@ -579,6 +581,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
         childView,
         value = this.get('value'),
         overflowView = childViews.lastObject(),
+        autoResize = this.get('shouldAutoResize'),
         isHorizontal = this.get('layoutDirection') === SC.LAYOUT_HORIZONTAL,
         visibleDim = isHorizontal ? this.$().width() : this.$().height(),  // The inner width/height of the div
         curElementsDim = 0,
@@ -600,7 +603,7 @@ SC.SegmentedView = SC.View.extend(SC.Control,
       // check for an overflow (leave room for the overflow segment except for with the last segment)
       dimToFit = (i === length - 1) ? curElementsDim : curElementsDim + this.cachedOverflowDim;
 
-      if (dimToFit > visibleDim) {
+      if (!autoResize && dimToFit > visibleDim) {
         // Add the localItem to the overflowItems
         this.overflowItems.pushObject(childView.get('localItem'));
 
@@ -630,6 +633,10 @@ SC.SegmentedView = SC.View.extend(SC.Control,
 
     // Store the minimum dimension (height/width) before overflow
     this.cachedMinimumDim = curElementsDim + this.cachedOverflowDim;
+
+    if (autoResize) {
+      this.adjust(this.get('layoutDirection') === SC.LAYOUT_HORIZONTAL ? 'width' : 'height', this.isOverflowing ? this.cachedMinimumDim : curElementsDim);
+    }
   },
 
   /**
